@@ -1,0 +1,48 @@
+[
+  {
+    "id": "1",
+    "title": "Producto 1",
+    "description": "Descripción del producto 1",
+    "code": "COD1",
+    "price": 10.5,
+    "status": true,
+    "stock": 5,
+    "category": "Categoría 1",
+    "thumbnails": [
+      "/img/producto1.jpg"
+    ]
+  },
+  {
+    "title": "manzana",
+    "description": "Una deliciosa Manzana",
+    "price": 2000,
+    "stock": 10,
+    "code": "COD3",
+    "category": "verduras",
+    "status": true,
+    "thumbnails": [],
+    "id": "3"
+  },
+  {
+    "title": "tarta",
+    "description": "tarta de manzana",
+    "price": 1500,
+    "stock": 2,
+    "code": "COD4",
+    "category": "postres",
+    "status": true,
+    "thumbnails": [],
+    "id": "4"
+  },
+  {
+    "title": "Aceite 1lts",
+    "description": "Aceite de Girasol",
+    "price": 2400,
+    "stock": 10,
+    "code": "COD6",
+    "category": "Almacen",
+    "status": true,
+    "thumbnails": [],
+    "id": "6"
+  }
+]

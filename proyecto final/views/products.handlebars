@@ -1,0 +1,69 @@
+<div class="container">
+    <h2>Lista de Productos</h2>
+    
+    {{#if products.length}}
+        <table class="products-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+                    <td>${{this.price}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>
+                        <a href="/products/{{this._id}}" class="btn">Ver Detalles</a>
+                        <button onclick="addToCart('{{../cartId}}', '{{this._id}}')" class="btn-add">Agregar al Carrito</button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        
+        <div class="pagination">
+            {{#if hasPrevPage}}
+                <a href="{{prevLink}}" class="btn">Anterior</a>
+            {{/if}}
+            
+            <span>Página {{page}} de {{totalPages}}</span>
+            
+            {{#if hasNextPage}}
+                <a href="{{nextLink}}" class="btn">Siguiente</a>
+            {{/if}}
+        </div>
+
+    {{else}}
+        <p class="no-products">No hay productos disponibles.</p>
+    {{/if}}
+    
+    <div class="actions">
+        <!-- Puedes navegar al carrito directamente o dejarlo fijo -->
+        <a href="/carts/{{cartId}}" class="btn">Ver mi Carrito</a>
+    </div>
+</div>
+
+<script>
+async function addToCart(cartId, productId) {
+    try {
+        const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+            method: 'POST',
+        });
+        
+        if(response.ok) {
+            alert('Producto agregado al carrito exitosamente');
+        } else {
+            console.error('Error al agregar el producto');
+        }
+    } catch (error) {
+        console.error('Error de red al agregar producto:', error);
+    }
+}
+</script>

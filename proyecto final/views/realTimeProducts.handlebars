@@ -1,0 +1,101 @@
+<div class="container">
+    <h2>Productos en Tiempo Real</h2>
+    
+    <div class="form-section">
+        <h3>Agregar Nuevo Producto</h3>
+        <form id="productForm">
+            <div class="form-group">
+                <label for="title">Nombre:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Descripción:</label>
+                <input type="text" id="description" name="description" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Precio:</label>
+                <input type="number" id="price" name="price" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="stock">Stock:</label>
+                <input type="number" id="stock" name="stock" required>
+            </div>
+            <div class="form-group">
+                <label for="code">Código:</label>
+                <input type="text" id="code" name="code" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Categoría:</label>
+                <input type="text" id="category" name="category" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Producto</button>
+        </form>
+    </div>
+    
+    <div class="products-section">
+        <h3>Lista de Productos</h3>
+        <div id="productsList">
+            <!-- Los productos se cargarán dinámicamente aquí -->
+        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    
+    // Escuchar actualizaciones de productos
+    socket.on('updateProducts', (products) => {
+        const productsList = document.getElementById('productsList');
+        
+        if (products.length === 0) {
+            productsList.innerHTML = '<p class="no-products">No hay productos disponibles.</p>';
+            return;
+        }
+        
+        let html = '<table class="products-table"><thead><tr>';
+        html += '<th>ID</th><th>Nombre</th><th>Descripción</th><th>Precio</th><th>Stock</th><th>Código</th><th>Categoría</th><th>Acciones</th>';
+        html += '</tr></thead><tbody>';
+        
+        products.forEach(product => {
+            html += `<tr>
+                <td>${product._id}</td>
+                <td>${product.title}</td>
+                <td>${product.description}</td>
+                <td>$${product.price}</td>
+                <td>${product.stock}</td>
+                <td>${product.code}</td>
+                <td>${product.category}</td>
+                <td><button class="btn btn-danger btn-sm" onclick="deleteProduct('${product._id}')">Eliminar</button></td>
+            </tr>`;
+        });
+        
+        html += '</tbody></table>';
+        productsList.innerHTML = html;
+    });
+    
+    // Manejar envío del formulario
+    document.getElementById('productForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const product = {
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            price: parseFloat(document.getElementById('price').value),
+            stock: parseInt(document.getElementById('stock').value),
+            code: document.getElementById('code').value,
+            category: document.getElementById('category').value,
+            status: true
+        };
+        
+        socket.emit('createProduct', product);
+        e.target.reset();
+    });
+    
+    // Función para eliminar producto
+    function deleteProduct(productId) {
+        if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+            socket.emit('deleteProduct', productId);
+        }
+    }
+</script>
